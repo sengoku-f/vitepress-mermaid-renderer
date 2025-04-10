@@ -130,13 +130,18 @@
     </div>
 
     <div class="diagram-wrapper" ref="diagramWrapper" @mousedown="startPan" @mousemove="pan" @mouseup="endPan"
-      @mouseleave="endPan" @wheel.prevent="handleWheel" @touchstart="handleTouchStart" @touchmove="handleTouchMove"
-      @touchend="handleTouchEnd">
+      @mouseleave="endPan" @wheel="handleWheel" @touchstart="handleTouchStart" @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
+      :style="{
+        cursor: dragEnabled ? isPanning ? 'grabbing' : 'grab' : 'auto',
+      }"
+    >
       <div :id="id" class="mermaid" :style="{
         opacity: isRendered ? 1 : 0,
         transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)`,
-        cursor: isPanning ? 'grabbing' : 'grab',
-      }">
+        cursor: dragEnabled ? isPanning ? 'grabbing' : 'grab' : 'auto',
+      }"
+      >
         {{ code }}
       </div>
     </div>
@@ -145,6 +150,7 @@
 
 <script setup lang="ts" clientOnly>
 import { onMounted, ref, onUnmounted, nextTick } from "vue";
+import { onClickOutside } from "@vueuse/core"
 import mermaid, { MermaidConfig } from "mermaid";
 import "./style.css";
 
@@ -261,6 +267,8 @@ const isPanning = ref(false);
 const lastX = ref(0);
 const lastY = ref(0);
 const originalDiagramSize = ref({ width: 0, height: 0 });
+// 新增拖动启用状态变量
+const dragEnabled = ref(false);
 
 // Touch event variables
 const initialTouchDistance = ref(0);
@@ -317,7 +325,22 @@ const toggleFullscreen = () => {
   }
 };
 
+// 点击外部区域取消激活
+onClickOutside(diagramWrapper, () => {
+  dragEnabled.value = false;
+  diagramWrapper.value?.classList.remove("drag-active");
+});
+
+const activateDrag = (e: MouseEvent) => {
+  // 阻止事件冒泡避免立即触发外部点击检测
+  e.stopPropagation();
+  dragEnabled.value = true;
+  diagramWrapper.value?.classList.add("drag-active");
+};
+
 const startPan = (e: MouseEvent) => {
+  activateDrag(e)
+  // if (!dragEnabled.value) return; // 点击后才触发
   isPanning.value = true;
   lastX.value = e.clientX;
   lastY.value = e.clientY;
@@ -342,6 +365,8 @@ const endPan = () => {
 
 // Touch event handlers
 const handleTouchStart = (e: TouchEvent) => {
+  if (!dragEnabled.value) return; // 点击后才触发
+
   if (e.touches.length === 1) {
     // Single touch - pan
     touchPanning.value = true;
@@ -360,6 +385,8 @@ const handleTouchStart = (e: TouchEvent) => {
 };
 
 const handleTouchMove = (e: TouchEvent) => {
+  if (!dragEnabled.value) return; // 点击后才触发
+
   e.preventDefault(); // Prevent scrolling while interacting with diagram
 
   if (touchPanning.value && e.touches.length === 1) {
@@ -404,7 +431,10 @@ const handleTouchEnd = () => {
 };
 
 const handleWheel = (e: WheelEvent) => {
-  if (e.ctrlKey) {
+  if (!dragEnabled.value) return; // 点击后才触发
+
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault(); // 激活时阻止默认行为
     // Zoom
     const delta = -Math.sign(e.deltaY) * 0.1;
     const newScale = scale.value * (1 + delta);
@@ -415,8 +445,8 @@ const handleWheel = (e: WheelEvent) => {
     }
   } else {
     // Pan
-    translateX.value += -e.deltaX / scale.value;
-    translateY.value += -e.deltaY / scale.value;
+    // translateX.value += -e.deltaX / scale.value;
+    // translateY.value += -e.deltaY / scale.value;
   }
 };
 
