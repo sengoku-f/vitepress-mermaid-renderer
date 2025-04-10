@@ -2,10 +2,12 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 import dts from "vite-plugin-dts";
+import { libInjectCss } from "vite-plugin-lib-inject-css";
 
 export default defineConfig({
   plugins: [
     vue(),
+    libInjectCss(),
     dts({
       insertTypesEntry: true,
     }),
@@ -28,9 +30,11 @@ export default defineConfig({
           vue: "Vue",
           mermaid: "mermaid",
         },
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name === "style.css") return "vitepress-mermaid-renderer.css";
-          return assetInfo.name || "assets/[name]-[hash][extname]";
+        assetFileNames: ({ name }) => {
+          if (/\.(css)$/.test(name ?? "")) {
+            return "vitepress-mermaid-renderer.css";
+          }
+          return "assets/[name]-[hash][extname]";
         },
       },
     },

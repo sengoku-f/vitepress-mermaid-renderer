@@ -1,5 +1,5 @@
 {
-  "name": "@donxj/vitepress-mermaid-renderer",
+  "name": "donxj-vitepress-mermaid-renderer",
   "version": "0.0.0",
   "description": "A VitePress plugin to render Mermaid diagrams with interactive controls",
   "type": "module",
@@ -29,9 +29,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "prepublishOnly": "bun run build",
-    "pack": "bun run build && bun pack",
-    "test-pack": "bun pack --dry-run",
+    "prepublishOnly": "npm run build",
+    "pack": "npm run build && npm pack",
+    "test-pack": "npm pack --dry-run",
     "format": "prettier --write ."
   },
   "keywords": [
@@ -49,8 +49,8 @@
   ],
   "license": "GPL-3.0-only",
   "peerDependencies": {
-    "vue": "^3.0.0",
-    "mermaid": "^11.0.0"
+    "mermaid": "^11.0.0",
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.13.10",
@@ -60,6 +60,7 @@
     "typescript": "^5.8.2",
     "vite": "^6.2.2",
     "vite-plugin-dts": "^4.5.3",
+    "vite-plugin-lib-inject-css": "^2.2.1",
     "vitepress": "^1.6.3",
     "vue": "^3.5.13"
   },

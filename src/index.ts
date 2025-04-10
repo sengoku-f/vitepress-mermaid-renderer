@@ -1,5 +1,6 @@
 import { MermaidRenderer } from "./MermaidRenderer";
 import type { MermaidConfig } from "mermaid";
+import "./style.css";
 
 // Check if we're in a browser environment
 const isBrowser =

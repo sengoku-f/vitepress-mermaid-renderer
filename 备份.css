@@ -1,0 +1,23 @@
+.diagram-wrapper:not(.drag-active) {
+  cursor: not-allowed;
+  position: relative;
+}
+
+.diagram-wrapper:not(.drag-active)::after {
+  content: "Click to enable interaction";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.diagram-wrapper:not(.drag-active):hover::after {
+  opacity: 1;
+}
