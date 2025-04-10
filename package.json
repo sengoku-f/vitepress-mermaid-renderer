@@ -1,6 +1,6 @@
 {
-  "name": "vitepress-mermaid-renderer",
-  "version": "1.0.14",
+  "name": "@donxj/vitepress-mermaid-renderer",
+  "version": "0.0.0",
   "description": "A VitePress plugin to render Mermaid diagrams with interactive controls",
   "type": "module",
   "main": "./dist/vitepress-mermaid-renderer.umd.cjs",
@@ -65,7 +65,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sametcn99/vitepress-mermaid-renderer.git"
+    "url": "https://github.com/sengoku-f/vitepress-mermaid-renderer.git"
   },
   "bugs": {
     "url": "https://github.com/sametcn99/vitepress-mermaid-renderer/issues"

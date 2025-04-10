@@ -136,4 +136,10 @@ export default defineConfig({
     // Last updated text
     lastUpdatedText: "Last updated",
   },
+
+  vite: {
+    server: {
+      host: "0.0.0.0",
+    },
+  }
 });
